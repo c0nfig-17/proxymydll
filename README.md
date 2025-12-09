@@ -1,12 +1,9 @@
 # proxymydll
 
-`proxymydll` is a Python helper that automates the creation of **DLL proxy stubs** (C++ source files) from an existing DLL.
+`proxymydll` is a Python helper that automates the creation of **DLL proxy stubs** (C++ source files) from an existing DLL. It is a fork of * **perfect-dll-proxy** by [mrexodia](https://github.com/mrexodia/perfect-dll-proxy) . In this repository, I modify the original code to automate several functionalities I needed, allowing me to generate my own malicious Proxy DLLs.
 
 ![Desktop View](/img/proxylogo.png)
 
-It is a fork of:
-
-* **perfect-dll-proxy** by [mrexodia](https://github.com/mrexodia/perfect-dll-proxy)
 
 with extra functionality to:
 
@@ -22,8 +19,12 @@ with extra functionality to:
 
 ---
 
-<a href="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4" target="_blank"><img src="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg" /></a>
 
+## Usage
+With this script, you can easily automate the process of generating DLLs for malicious use. Using --cmd, you can specify the command to be executed. With --ip, you define a target IP address, and with --down you can download a specific file from that IP. Alternatively, using --downexe, you can download and directly execute it via IEX. <br>
+I added an --enc feature that allows you to recursively encode and execute the specified content. For example, with --enc 3, you will execute a PowerShell instance that runs another encoded PowerShell instance, which runs another encoded PowerShell instance, and so on. The goal is to make detection more difficult, although you should keep in mind that in some cases this may actually draw more attention."
+
+```python
 usage: proxymydll.py [-h] [--output OUTPUT] [--force-ordinals] [--cmd CMD] [--ip IP] [--down DOWN] [--downexe DOWNEXE] [--enc ENC] dll
 
 Generate a proxy DLL
@@ -40,6 +41,14 @@ options:
   --down DOWN           Download file but do NOT execute
   --downexe DOWNEXE     Download AND execute via IEX
   --enc ENC             Recursive Base64 PS encoding depth
+```
+
+## Aditional Content
+With this s
+
+
+## Demo
+<a href="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4" target="_blank"><img src="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg" /></a>
 
 
 
