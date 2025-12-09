@@ -44,11 +44,11 @@ options:
 ```
 
 ## Aditional Content
-With this s
-
+You will have /add directory with secure32.dll and OneDriveSetup.exe as additional resources to easly proxy this dll.
 
 ## Demo
 <a href="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4" target="_blank"><img src="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg" /></a>
+
 
 
 
