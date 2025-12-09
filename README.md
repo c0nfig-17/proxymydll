@@ -15,6 +15,7 @@ with extra functionality to:
 > This tool is intended for **educational, research and authorized red team / penetration testing** purposes only.
 > Do **not** use it on systems you do not own or have explicit permission to test.
 > You are solely responsible for how you use this code.
+> Some parts of this code was made by IA. Keep sure what execute. 
 
 ---
 
@@ -50,6 +51,7 @@ You will have /add directory with secure32.dll as additional resources to easly 
 
 ## To-do
 - Add to my blog proxymydll demo, usage and theory
+
 
 
 
