@@ -22,7 +22,7 @@ with extra functionality to:
 
 ---
 
-[![asciicast](https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg)](https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4)
+<script src="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.js" id="asciicast-5OqPD3nq6z9GOfhawzFA4Wgu4" async="true"></script>
 
 usage: proxymydll.py [-h] [--output OUTPUT] [--force-ordinals] [--cmd CMD] [--ip IP] [--down DOWN] [--downexe DOWNEXE] [--enc ENC] dll
 
@@ -40,3 +40,4 @@ options:
   --down DOWN           Download file but do NOT execute
   --downexe DOWNEXE     Download AND execute via IEX
   --enc ENC             Recursive Base64 PS encoding depth
+
