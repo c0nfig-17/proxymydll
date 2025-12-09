@@ -2,8 +2,7 @@
 
 `proxymydll` is a Python helper that automates the creation of **DLL proxy stubs** (C++ source files) from an existing DLL. It is a fork of * **perfect-dll-proxy** by [mrexodia](https://github.com/mrexodia/perfect-dll-proxy) . In this repository, I modify the original code to automate several functionalities I needed, allowing me to generate my own malicious Proxy DLLs.
 
-![Desktop View](/img/proxylogo.png)
-
+<img src="/img/proxylogo.png" alt="Desktop View" width="200">
 
 with extra functionality to:
 
@@ -44,10 +43,14 @@ options:
 ```
 
 ## Aditional Content
-You will have /add directory with secure32.dll and OneDriveSetup.exe as additional resources to easly proxy this dll.
+You will have /add directory with secure32.dll as additional resources to easly proxy this dll. You can download for example [OneDrive](https://www.microsoft.com/es-es/microsoft-365/onedrive/download) to proxy the installer.
 
 ## Demo
 <a href="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4" target="_blank"><img src="https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg" /></a>
+
+## To-do
+- Add to my blog proxymydll demo, usage and theory
+
 
 
 
