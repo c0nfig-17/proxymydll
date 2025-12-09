@@ -22,4 +22,21 @@ with extra functionality to:
 
 ---
 
+[![asciicast](https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4.svg)](https://asciinema.org/a/5OqPD3nq6z9GOfhawzFA4Wgu4)
 
+usage: proxymydll.py [-h] [--output OUTPUT] [--force-ordinals] [--cmd CMD] [--ip IP] [--down DOWN] [--downexe DOWNEXE] [--enc ENC] dll
+
+Generate a proxy DLL
+
+positional arguments:
+  dll                   Path to the DLL to generate a proxy for
+
+options:
+  -h, --help            show this help message and exit
+  --output, -o OUTPUT   Generated C++ proxy file
+  --force-ordinals, -v
+  --cmd CMD             Command to execute
+  --ip IP               IP for downloads
+  --down DOWN           Download file but do NOT execute
+  --downexe DOWNEXE     Download AND execute via IEX
+  --enc ENC             Recursive Base64 PS encoding depth
