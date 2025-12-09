@@ -2,7 +2,7 @@
 
 `proxymydll` is a Python helper that automates the creation of **DLL proxy stubs** (C++ source files) from an existing DLL.
 
-![Desktop View](/proxylogo.png)
+![Desktop View](/img/proxylogo.png)
 
 It is a fork of:
 
@@ -40,5 +40,6 @@ options:
   --down DOWN           Download file but do NOT execute
   --downexe DOWNEXE     Download AND execute via IEX
   --enc ENC             Recursive Base64 PS encoding depth
+
 
 
